@@ -1,0 +1,42 @@
+{
+  "name": "webpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "watch": "webpack --watch",
+    "start": "webpack-dev-server --mode development --open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/canonHu/webpack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/canonHu/webpack/issues"
+  },
+  "homepage": "https://github.com/canonHu/webpack#readme",
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^0.28.10",
+    "csv-loader": "^2.1.1",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.0.6",
+    "less-loader": "^4.1.0",
+    "style-loader": "^0.20.3",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.11",
+    "webpack-dev-server": "^3.1.1",
+    "xml-loader": "^1.2.1"
+  },
+  "dependencies": {
+    "es5-shim": "^4.5.10",
+    "less": "^3.0.1",
+    "lodash": "^4.17.5"
+  }
+}
