@@ -1,4 +1,4 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 // import 'es5-shim';
 import './style.less';
 import printMe from './print';

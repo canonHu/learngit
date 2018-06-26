@@ -1,34 +1,32 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+// const CleanWebpackPlugin = require('clean-webpack-plugin');
+const extractCSS = new ExtractTextPlugin('stylesheets/[name]-one.css');
+const extractLESS = new ExtractTextPlugin('stylesheets/[name]-two.css');
 
 module.exports = {
     entry: {
         app: './src/index.js'
     },
 
-    devtool: 'inline-source-map',
-
-    devServer: {
-        contentBase: './dist'
-    },
-
     plugins: [
-        new CleanWebpackPlugin(['dist']),
+        extractCSS,
+        extractLESS,
         new HtmlWebpackPlugin({
-            title: 'unity title'
+            title: 'new'
         })
     ],
 
     module: {
         rules: [
             {
-                test: /\.(css|less)$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'less-loader'
-                ]
+                test: /\.css$/,
+                use: extractCSS.extract(['css-loader', 'postcss-loader'])
+            },
+            {
+                test: /\.less$/i,
+                use: extractLESS.extract(['css-loader', 'less-loader'])
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
@@ -58,7 +56,8 @@ module.exports = {
     },
 
     output: {
-        filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        filename: '[name].[chunkhash].js',
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: '/'
     }
-};
+}
