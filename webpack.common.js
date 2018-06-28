@@ -1,4 +1,5 @@
 const path = require('path');
+// const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 // const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -7,15 +8,24 @@ const extractLESS = new ExtractTextPlugin('stylesheets/[name]-two.css');
 
 module.exports = {
     entry: {
-        app: './src/index.js'
+        // polyfills: './src/js/polyfills.js',
+        index: './src/index.js'
     },
 
     plugins: [
         extractCSS,
         extractLESS,
         new HtmlWebpackPlugin({
-            title: 'new'
+            title: 'Progressive Web Application',
+            template: 'index.ejs'
         })
+
+        // 整个应用程序中全局提供lodash方法
+        // new webpack.ProvidePlugin({
+        //     _: 'lodash'
+            // 只提供join从lodash哪里调用的方法
+            // join: ['lodash', 'join']
+        // })
     ],
 
     module: {
