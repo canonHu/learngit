@@ -9,7 +9,7 @@ const extractLESS = new ExtractTextPlugin('stylesheets/[name]-two.css');
 module.exports = {
     entry: {
         // polyfills: './src/js/polyfills.js',
-        index: './src/index.js'
+        index: './src/js/index.js'
     },
 
     plugins: [
@@ -31,12 +31,39 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.css$/,
-                use: extractCSS.extract(['css-loader', 'postcss-loader'])
+                test: /\.vue$/,
+                loader: 'vue-loader',
+                options: {
+                    loaders: {
+                        'less': ExtractTextPlugin.extract({
+                            use: [
+                                {
+                                    loader: 'css-loader',
+                                    options: {
+                                        sourceMap: false,
+                                        minimize: true //css压缩
+                                    }
+                                },
+                                {
+                                    loader: 'less-loader',
+                                    options: {
+                                        sourceMap: false
+                                    }
+                                }
+                            ]
+                        })
+                    },
+                }
             },
             {
-                test: /\.less$/i,
-                use: extractLESS.extract(['css-loader', 'less-loader'])
+                test: /\.js$/,
+                use: [
+                    'babel-loader'
+                ]
+            },
+            {
+                test: /\.less$/,
+                loader: ExtractTextPlugin.extract("style-loader", "css-loader!less-loader")
             },
             {
                 test: /\.(png|svg|jpg|gif)$/,
