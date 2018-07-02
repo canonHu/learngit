@@ -33,19 +33,6 @@ app.all('*', function (req, res, next) {
     next();
 });
 
-var questions = [
-    {
-        data: 213,
-        num: 444,
-        age: 12
-    },
-    {
-        data: 456,
-        num: 678,
-        age: 13
-    }
-];
-
 let lookData = (params, callback) => {
     // Use connect method to connect to the server
     MongoClient.connect(url, function (err, client) {
