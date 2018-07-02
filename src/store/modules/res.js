@@ -2,12 +2,9 @@ import { res } from '../../api';
 import {
     LOADING_START,
     LOADING_END,
-    GET_ZG_APP_DATA_REQUEST,
-    GET_ZG_APP_DATA_SUCCESS,
-    GET_ZG_APP_DATA_FAILED,
-    GET_ZG_APP_DATA_REQUEST_DETAIL,
-    GET_ZG_APP_DATA_SUCCESS_DETAIL,
-    GET_ZG_APP_DATA_FAILED_DETAIL,
+    DETAIL_REQUEST,
+    DETAIL_SUCCESS,
+    DETAIL_FAILED,
 } from '../mutation-types';
 
 const state = {
@@ -15,70 +12,45 @@ const state = {
     mainList: [],
     resData: '',
     dateType: 'month',
-    yljgOrQy: '1'
+    yljgOrQy: '1',
+    articleList: '',
+    detailRes: null,
+    pagination: null
 };
 
 const actions = {
-    [GET_ZG_APP_DATA_REQUEST]({ commit }, payload) {
+    [DETAIL_REQUEST]({ commit }, payload) {
         commit(LOADING_START, {
             text: '',
             isBlocked: true,
         });
-        commit(GET_ZG_APP_DATA_REQUEST);
+        commit(DETAIL_REQUEST);
 
-        return res.getZgAppData(
+        return res.detailData(
             payload,
             (res) => {
                 commit(LOADING_END);
-                commit(GET_ZG_APP_DATA_SUCCESS, { res });
+                commit(DETAIL_SUCCESS, { res });
             },
             (err) => {
-                commit(GET_ZG_APP_DATA_FAILED);
+                commit(DETAIL_FAILED);
             },
         );
-    },
-
-    [GET_ZG_APP_DATA_REQUEST_DETAIL]({ commit }, payload) {
-        commit(LOADING_START, {
-            text: '',
-            isBlocked: true,
-        });
-        commit(GET_ZG_APP_DATA_REQUEST_DETAIL);
-
-        return res.getZgAppData(
-            payload,
-            (res) => {
-                commit(LOADING_END);
-                commit(GET_ZG_APP_DATA_SUCCESS_DETAIL, { res });
-            },
-            (err) => {
-                commit(GET_ZG_APP_DATA_FAILED_DETAIL);
-            },
-        );
-    },
+    }
 };
 
 const mutations = {
-    [GET_ZG_APP_DATA_REQUEST](state, num) {
-        state.mainList = [];
-        state.resData = '';
+    [DETAIL_REQUEST](state, num) {
+        state.detailRes = null;
     },
 
-    [GET_ZG_APP_DATA_SUCCESS](state, { res }) {
-        state.mainList = res.rspData;
-        state.resData = res.rspData;
+    [DETAIL_SUCCESS](state, { res }) {
+        if (res.success) {
+            // state.detailRes = res.data;
+        }
     },
 
-    [GET_ZG_APP_DATA_FAILED](state, { err }) {
-    },
-
-    [GET_ZG_APP_DATA_REQUEST_DETAIL](state, num) {
-    },
-
-    [GET_ZG_APP_DATA_SUCCESS_DETAIL](state, { res }) {
-    },
-
-    [GET_ZG_APP_DATA_FAILED_DETAIL](state, { err }) {
+    [DETAIL_FAILED](state) {
     }
 };
 

@@ -1,0 +1,75 @@
+import axios from 'axios';
+import Config from '../js/config';
+import { SEARCH_REQUEST } from '../store/mutation-types';
+
+const request = (url, pContent) => {
+    return axios({
+        method: 'POST',
+        headers: {
+            "Content-Type": "text/plain;charset=UTF-8"
+        },
+        url: url,
+        data: JSON.stringify(pContent)
+    })
+}
+
+const response = (response) => {
+    if (response.status >= 400) {
+        throw new Error(`error received from server: ${response.statusText}`);
+    } else {
+        return response.data;
+    }
+};
+
+export const res = {
+    searchArticle(payload, cb, errCb) {
+        const params = payload;
+
+        return request(Config.urlPath + 'search', params)
+            .then(response)
+            .then((jsonData) => {
+                try {
+                    cb(jsonData);
+
+                    return jsonData;
+                } catch (e) {
+                    throw e;
+                }
+            })
+            .catch(err => errCb(err));
+    },
+
+    detailData(payload, cb, errCb) {
+        const params = payload;
+
+        return request(Config.urlPath + 'detail', params)
+            .then(response)
+            .then((jsonData) => {
+                try {
+                    cb(jsonData);
+
+                    return jsonData;
+                } catch (e) {
+                    throw e;
+                }
+            })
+            .catch(err => errCb(err));
+    },
+
+    deleteItem(payload, cb, errCb) {
+        const params = payload;
+
+        return request(Config.urlPath + 'remove', params)
+            .then(response)
+            .then((jsonData) => {
+                try {
+                    cb(jsonData);
+
+                    return jsonData;
+                } catch (e) {
+                    throw e;
+                }
+            })
+            .catch(err => errCb(err));
+    }
+};
