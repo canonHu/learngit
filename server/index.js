@@ -41,24 +41,32 @@ let lookData = (params, callback) => {
 
         const db = client.db(dbName);
 
-        // insertDocuments(db, function () {
         findDocuments(params, db, function (res) {
-            callback(res)
+            callback(res);
             client.close();
         });
-        // });
     });
 }
 
 let addData = (params, callback) => {
+    MongoClient.connect(url, function (err, client) {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
 
+        const db = client.db(dbName);
+
+        insertDocuments(params, db, function (res) {
+            callback(res);
+            client.close();
+        })
+    });
 }
 
 //写个接口123
 app.get('/123', function (req, res) {
     res.status(200);
     // console.log(2)
-    lookData({}, function(jsonData) {
+    addData([{ name: 'xiaoming' }, { name: 'xiaoming1' }], function(jsonData) {
         res.json(jsonData);
         // console.log(res)
     })
