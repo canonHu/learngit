@@ -1,15 +1,17 @@
 import axios from 'axios';
 import Config from '../js/config';
 
+const config = {
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+        // 'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    responseType: 'json',// default
+    method: 'POST'
+}
+
 const request = (url, pContent) => {
-    return axios({
-        method: 'GET',
-        headers: {
-            "Content-Type": "text/plain;charset=UTF-8"
-        },
-        url: url,
-        data: JSON.stringify(pContent)
-    })
+    return axios.post(url, pContent, config)
 }
 
 const response = (response) => {
@@ -24,9 +26,9 @@ export const res = {
     detailData(payload, cb, errCb) {
         const params = payload;
 
-        return request('/123', params)
+        return request('/indexData', {})
             .then(response)
-            .then((jsonData) => {
+            .then(jsonData => {
                 try {
                     cb(jsonData);
 

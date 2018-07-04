@@ -2,6 +2,9 @@ const express = require('express');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 
+
+const bodyParser = require('body-parser');
+
 const app = express();
 const config = require('../webpack.common.js');
 const compiler = webpack(config);
@@ -17,6 +20,9 @@ const {
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
 // Connection URL
 const url = 'mongodb://localhost:27017';
 
@@ -24,7 +30,7 @@ const url = 'mongodb://localhost:27017';
 const dbName = 'site';
 
 //设置跨域访问
-app.all('*', function (req, res, next) {
+app.all('*', (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
@@ -33,46 +39,112 @@ app.all('*', function (req, res, next) {
     next();
 });
 
-let lookData = (params, callback) => {
+const findData = (params, callback) => {
     // Use connect method to connect to the server
-    MongoClient.connect(url, function (err, client) {
+    MongoClient.connect(url, (err, client) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
 
         const db = client.db(dbName);
 
-        findDocuments(params, db, function (res) {
+        findDocuments(params, db, res => {
             callback(res);
             client.close();
         });
     });
 }
 
-let addData = (params, callback) => {
-    MongoClient.connect(url, function (err, client) {
+const addData = (params, callback) => {
+    MongoClient.connect(url, (err, client) => {
         assert.equal(null, err);
         console.log("Connected successfully to server");
 
         const db = client.db(dbName);
 
-        insertDocuments(params, db, function (res) {
+        insertDocuments(params, db, res => {
             callback(res);
             client.close();
-        })
+        });
     });
 }
 
-//写个接口123
-app.get('/123', function (req, res) {
+const deleteData = (params, flag, callback) => {
+    MongoClient.connect(url, (err, client) => {
+        assert.equal(null, err);
+
+        const db = client.db(dbName);
+
+        removeDocument(params, db, flag, res => {
+            callback(res);
+            client.close();
+        });
+    });
+}
+
+const updateData = (params, flag, callback) => {
+    MongoClient.connect(url, (err, client) => {
+        assert.equal(null, err);
+
+        const db = client.db(dbName);
+
+        updateDocument(params, db, flag, res => {
+            callback(res);
+            client.close();
+        });
+    });
+}
+
+const indexData = (params, callback) => {
+    MongoClient.connect(url, (err, client) => {
+        assert.equal(null, err);
+
+        const db = client.db(dbName);
+
+        indexCollection(params, db, res => {
+            callback(res);
+            client.close();
+        });
+    });
+};
+
+// 查询接口findData
+app.all('/findData', (req, res) => {
     res.status(200);
-    // console.log(2)
-    addData([{ name: 'xiaoming' }, { name: 'xiaoming1' }], function(jsonData) {
-        res.json(jsonData);
-        // console.log(res)
-    })
-    // let jsondata = lookData({ name: "weare2" });
-    
+    findData(req.body, jsonData => {
+        res.json(jsonData)
+    });
 });
+
+// 添加接口addData
+app.all('/addData', (req, res) => {
+    res.status(200);
+    addData(req.body, jsonData => {
+        res.json(jsonData)
+    });
+});
+
+// 删除接口deleteData
+app.all('/deleteData', (req, res) => {
+    res.status(200);
+    deleteData(req.body.data, req.body.flag, jsonData => {
+        res.json(jsonData)
+    });
+});
+
+// 更新接口updateData
+app.all('/updateData', (req, res) => {
+    res.status(200);
+    updateData(req.body, req.body.flag, jsonData => {
+        res.json(jsonData)
+    });
+});
+
+app.all('/indexData', (req, res) => {
+    res.status(200);
+    indexData({a: 777}, jsonData => {
+        res.json(jsonData)
+    });
+})
 
 
 // 开发模式
@@ -86,9 +158,6 @@ app.use(webpackDevMiddleware(compiler, {
 
 //配置服务端口
 // // Serve the files on port 3000.
-app.listen(3000, function () {
+app.listen(3000, () => {
     console.log('Example app listening on port 3000!\n');
 });
-
-
-
