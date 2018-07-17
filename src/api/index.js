@@ -26,7 +26,7 @@ export const res = {
     detailData(payload, cb, errCb) {
         const params = payload;
 
-        return request('/indexData', {})
+        return request('/findData', {})
             .then(response)
             .then(jsonData => {
                 try {
