@@ -5,9 +5,23 @@
 </template>
 
 <script>
-export default {
+    import { mapState } from 'vuex';
     
-}
+    export default {
+        
+        computed: {
+            ...mapState(['res']),
+
+            login () {
+                return this.res.login;
+            }
+        },
+        created () {
+            if (this.login) {
+                console.log(2)
+            }
+        }
+    }
 </script>
 
 <style lang="less" scoped>
