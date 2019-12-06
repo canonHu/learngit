@@ -9,7 +9,8 @@ const extractLESS = new ExtractTextPlugin('stylesheets/[name]-two.css');
 module.exports = {
     entry: {
         // polyfills: './src/js/polyfills.js',
-        index: './src/js/index.js'
+        // index: './src/js/index.js',
+        index: './three/index.js'
     },
 
     plugins: [
